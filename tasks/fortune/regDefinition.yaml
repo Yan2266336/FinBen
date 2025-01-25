@@ -11,8 +11,8 @@ generation_kwargs:
   temperature: 0.0
   max_gen_toks: 512
 metric_list:
-  - metric: !function gr_utils.rouge1
-    aggregation: !function gr_utils.rouge1_agg
+  - metric: !function reg_utils.bertscore
+    aggregation: !function reg_utils.bertscore_agg
     higher_is_better: true
 metadata:
   version: '1.0'

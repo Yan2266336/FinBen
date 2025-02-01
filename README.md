@@ -7,9 +7,11 @@ git clone https://github.com/Yan2266336/FinBen.git --recursive
 conda create -n finben python=3.12
 conda activate finben
 
-cd FinBen/finlm_eval/
-pip install -e .
-pip install -e .[vllm]
+```bash
+   cd FinBen/finlm_eval/
+   pip install -e .
+   pip install -e .[vllm]
+```
 
 ## login to your huggingface
 export HF_TOKEN="your_hf_token"

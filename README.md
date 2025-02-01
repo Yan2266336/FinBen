@@ -1,9 +1,9 @@
 ## create your project fork from https://github.com/The-FinAI/FinBen
 
-# github repo clone
+## github repo clone
 git clone https://github.com/Yan2266336/FinBen.git --recursive
 
-# set environment
+## set environment
 conda create -n finben python=3.12
 conda activate finben
 
@@ -11,15 +11,23 @@ cd FinBen/finlm_eval/
 pip install -e .
 pip install -e .[vllm]
 
-# login to your huggingface
+## login to your huggingface
 export HF_TOKEN="your_hf_token"
-# verify it
+## verify it
 echo $HF_TOKEN
 
-# model evaluation
+## model evaluation
 cd FinBen/
-#gpt
-lm_eval --model openai-chat-completions --model_args "model=gpt-4o" --tasks GRQAGen --output_path results --use_cache ./cache --hf_hub_log_args "hub_results_org=TheFinAI,details_repo_name=lm-eval-results,push_results_to_hub=True,push_samples_to_hub=True,public_repo=False" --log_samples --apply_chat_template --include_path ./tasks
+### for GPT model
+lm_eval --model openai-chat-completions\
+        --model_args "model=gpt-4o" \
+        --tasks GRQAGen \
+        --output_path results \
+        --use_cache ./cache \
+        --hf_hub_log_args "hub_results_org=TheFinAI,details_repo_name=lm-eval-results,push_results_to_hub=True,push_samples_to_hub=True,public_repo=False" \
+        --log_samples \
+        --apply_chat_template \
+        --include_path ./tasks
 
 #small model
 lm_eval --model hf --model_args "pretrained=TheFinAI/FinLLaMA" --tasks regAbbreviation --num_fewshot 0 --device cuda:1 --batch_size 8 --output_path results --hf_hub_log_args "hub_results_org=TheFinAI,details_repo_name=lm-eval-finllama-regulation-results,push_results_to_hub=True,push_samples_to_hub=True,public_repo=False" --log_samples --apply_chat_template --include_path ./tasks

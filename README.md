@@ -20,6 +20,7 @@ echo $HF_TOKEN
 cd FinBen/
 ### for GPT model
 ‘’‘
+bash
 lm_eval --model openai-chat-completions\
         --model_args "model=gpt-4o" \
         --tasks GRQAGen \

@@ -19,6 +19,7 @@ echo $HF_TOKEN
 ## model evaluation
 cd FinBen/
 ### for GPT model
+‘’‘
 lm_eval --model openai-chat-completions\
         --model_args "model=gpt-4o" \
         --tasks GRQAGen \
@@ -28,6 +29,7 @@ lm_eval --model openai-chat-completions\
         --log_samples \
         --apply_chat_template \
         --include_path ./tasks
+’‘’
 
 ### for small model
 lm_eval --model hf \
@@ -65,6 +67,11 @@ lm_eval --model vllm \
         --apply_chat_template \
         --include_path ./tasks
 ***results will be saved to FinBen/results/, you could add it into .gitignore***
+
+- **0-shot setting:** Use `num_fewshot=0` and `lm-eval-results-gr-0shot` as the results repository.
+- **5-shot setting:** Use `num_fewshot=5` and `lm-eval-results-gr-5shot` as the results repository.
+- **Base models:** Remove `apply_chat_template`.
+- **Instruction models:** Use `apply_chat_template`.
 
 ## add new task
 cd FinBen/tasks/your_project_folder/ # create yaml file for new task

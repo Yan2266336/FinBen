@@ -4,8 +4,10 @@
 git clone https://github.com/Yan2266336/FinBen.git --recursive
 
 ## set environment
+```bash
 conda create -n finben python=3.12
 conda activate finben
+```
 
 ```bash
    cd FinBen/finlm_eval/

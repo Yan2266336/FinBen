@@ -12,8 +12,8 @@ generation_kwargs:
   temperature: 0.0
   max_gen_toks: 512
 metric_list:
-  - metric: exact_match
-    aggregation: mean
+  - metric: !function reg_utils.exact_match
+    aggregation: !function reg_utils.exact_match_agg
     higher_is_better: true
 metadata:
   version: '1.0'

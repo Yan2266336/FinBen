@@ -47,8 +47,8 @@ def bertscore_agg(items):
     Higher is better.
     """
 
-    refs = [item[0] for item in items]
-    preds = [item[1] for item in items]
+    refs = [normalize_bertscore_text(item[0]) for item in items]
+    preds = [normalize_bertscore_text(item[1]) for item in items]
 
     # Load BERTScore metric
     bertscore_scorer = evaluate.load("evaluate-metric/bertscore",device=DEVICE)
@@ -58,6 +58,34 @@ def bertscore_agg(items):
     
     # Use the F1 scores for aggregation
     return sum(scores["f1"]) / len(scores["f1"]) if scores["f1"] else 0.0
+
+def normalize_bertscore_text(text):
+    
+    exclusions = [
+        'common stock',
+    ]
+
+    ticker_pattern = re.compile(r'\b[A-Z]{1,5}\b')
+
+    text = text.lower()
+
+    for term in exclusions:
+        term_pattern = re.compile(r'\b' + re.escape(term.lower()) + r'\b')
+        text = term_pattern.sub('', text)
+
+    # Remove stock tickers
+    text = ticker_pattern.sub('', text)
+
+    # Remove hyphens/dashes
+    text = re.sub(r'[-–—]', ' ', text)
+
+    # Remove punctuation
+    text = re.sub(r'[.,\/#!$%\^&\*;:{}=\_`~()"]', '', text)
+
+    # Remove extra spaces
+    text = re.sub(r'\s+', ' ', text).strip()
+
+    return text
 
 
 

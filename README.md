@@ -46,13 +46,13 @@ lm_eval --model openai-chat-completions\
 ### for small model
 ```bash
 lm_eval --model hf \
-        --model_args "pretrained=TheFinAI/FinLLaMA" \
+        --model_args "pretrained=Qwen/Qwen2.5-0.5B" \
         --tasks regAbbreviation \
         --num_fewshot 0 \
         --device cuda:1 \
         --batch_size 8 \
         --output_path results \
-        --hf_hub_log_args "hub_results_org=TheFinAI,details_repo_name=lm-eval-finllama-regulation-results,push_results_to_hub=True,push_samples_to_hub=True,public_repo=False" \
+        --hf_hub_log_args "hub_results_org=TheFinAI,details_repo_name=lm-eval-reAbbr-0shot-results,push_results_to_hub=True,push_samples_to_hub=True,public_repo=False" \
         --log_samples \
         --apply_chat_template \
         --include_path ./tasks

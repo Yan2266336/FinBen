@@ -1,7 +1,9 @@
 ## create your project fork from https://github.com/The-FinAI/FinBen
 
 ## github repo clone
+```bash
 git clone https://github.com/Yan2266336/FinBen.git --recursive
+```
 
 ## set environment
 ```bash
@@ -10,20 +12,26 @@ conda activate finben
 ```
 
 ```bash
-   cd FinBen/finlm_eval/
-   pip install -e .
-   pip install -e .[vllm]
+cd FinBen/finlm_eval/
+pip install -e .
+pip install -e .[vllm]
 ```
 
 ## login to your huggingface
+```bash
 export HF_TOKEN="your_hf_token"
+```
 ## verify it
+```bash
 echo $HF_TOKEN
+```
 
 ## model evaluation
+```bash
 cd FinBen/
+```
 ### for GPT model
-‘’‘bash
+```bash
 lm_eval --model openai-chat-completions\
         --model_args "model=gpt-4o" \
         --tasks GRQAGen \
@@ -33,9 +41,10 @@ lm_eval --model openai-chat-completions\
         --log_samples \
         --apply_chat_template \
         --include_path ./tasks
-’‘’
+```
 
 ### for small model
+```bash
 lm_eval --model hf \
         --model_args "pretrained=TheFinAI/FinLLaMA" \
         --tasks regAbbreviation \
@@ -47,10 +56,13 @@ lm_eval --model hf \
         --log_samples \
         --apply_chat_template \
         --include_path ./tasks
+```
 
 ### for large model
+```bash
 export VLLM_WORKER_MULTIPROC_METHOD="spawn"
-
+```
+```bash
 lm_eval --model vllm \
         --model_args "pretrained=google/gemma-2-27b-it,tensor_parallel_size=4,gpu_memory_utilization=0.8,max_model_len=1024" \
         --tasks GRQA \
@@ -70,6 +82,7 @@ lm_eval --model vllm \
         --log_samples \
         --apply_chat_template \
         --include_path ./tasks
+```
 ***results will be saved to FinBen/results/, you could add it into .gitignore***
 
 - **0-shot setting:** Use `num_fewshot=0` and `lm-eval-results-gr-0shot` as the results repository.
@@ -78,23 +91,37 @@ lm_eval --model vllm \
 - **Instruction models:** Use `apply_chat_template`.
 
 ## add new task
+```bash
 cd FinBen/tasks/your_project_folder/ # create yaml file for new task
-#### cd FinBen/tasks/fortune/ # create yaml file for new task
-#### lm-evaluation-harness/docs/task_guide.md # Good Reference Tasks
+```
+
+### For example
+```bash
+cd FinBen/tasks/fortune/ # create yaml file for new task
+```
+- **lm-evaluation-harness/docs/task_guide.md** # Good Reference Tasks
 
 
 ## if push to leaderboard
-vim FinBen/aggregate.py **change to your project huggingface repos in line 415 and 421**
+```bash
+vim FinBen/aggregate.py  #change to your project huggingface repos in line 415 and 42
+```
 
 ## new model
+```bash
 vim FinBen/aggregate.py # add new model configuration to MODEL_DICT
+
+python aggregate.py
+```
 **https://huggingface.co/spaces/open-llm-leaderboard/open_llm_leaderboard#/?search=qwen2.5-1.5b-instruct**
 **https://mot.isitopen.ai/**
-python aggregate.py
 
 ## new task
-vim FinBen/aggregate.py **add new task to METRIC_DICT # for classification task, change 1.0 / 6.0 to your baseline**
+```bash
+vim FinBen/aggregate.py ##add new task to METRIC_DICT # for classification task, change 1.0 / 6.0 to your baseline
+
 python aggregate.py
+```
 ### huggingface leaderboard part
 #### backend/app/services/leaderboard.py
 #### frontend/src/pages/LeaderboardPage/components/Leaderboard/utils/columnUtils.js

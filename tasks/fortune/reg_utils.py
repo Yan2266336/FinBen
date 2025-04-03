@@ -10,8 +10,6 @@ import datetime
 from collections import defaultdict
 from FactScoreLite.factscore import FactScore
 
-os.environ["OPENAI_API_KEY"] = 'your api key here'
-
 DEVICE = "cuda" if torch.cuda.is_available() else "CPU"
 
 # Define categories
@@ -86,8 +84,6 @@ def normalize_bertscore_text(text):
     text = re.sub(r'\s+', ' ', text).strip()
 
     return text
-
-
 
 
 # rouge1
@@ -196,12 +192,28 @@ def normalize_entity(entity):
     return normalized
 
 
+def remove_json_markdown(s):
+    
+    pattern = r"^\s*```json\s*\n(.*?)\n\s*```$"
+    match = re.match(pattern, s.strip(), re.DOTALL)
+    
+    if match:
+
+        json_content = match.group(1)
+        return json_content
+    else:
+        return s
+
+
 def parse_entities(entity_str, is_generated=False):
     """ Parses and normalizes entity strings. """
     entities = defaultdict(list)
     
     if not entity_str or not isinstance(entity_str, str):
         return entities
+    
+    entity_str = remove_json_markdown(entity_str)
+    
     
     try:
         if is_generated:
@@ -268,6 +280,14 @@ def FActScore_agg(items):
     refs = list(zip(*items))[0]
     preds = list(zip(*items))[1]
 
+    path1 = "/gpfs/radev/home/lq62/inference/FinBen/decisions.json"
+    path2 = "/gpfs/radev/home/lq62/inference/FinBen/facts.json"
+    if os.path.exists(path1):
+        os.remove(path1)
+
+    if os.path.exists(path2):
+        os.remove(path2)
+        
     fact_scorer = FactScore()
     scores, _ = fact_scorer.get_factscore(generations=preds, knowledge_sources=refs)
 

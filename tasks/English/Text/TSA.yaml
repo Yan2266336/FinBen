@@ -1,17 +1,12 @@
 dataset_name: default
 dataset_path: ChanceFocus/flare-fiqasa
-output_type: generate_until
-doc_to_target: '{{answer}}'
+doc_to_target: gold
 doc_to_text: '{{query}}'
+output_type: multiple_choice
+doc_to_choice: choices
 fewshot_split: test
 should_decontaminate: true
 doc_to_decontamination_query: "{{query}}"
-generation_kwargs:
-  until:
-    - "@@"
-  do_sample: false
-  temperature: 0.0
-  max_gen_toks: 512
 metric_list:
   - metric: acc
     aggregation: mean
@@ -19,5 +14,5 @@ metric_list:
 metadata:
   version: '1.0'
 task: TSA
-tag: multifin
+tag: en
 test_split: test

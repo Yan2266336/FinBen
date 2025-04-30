@@ -1,7 +1,7 @@
 dataset_name: default
-dataset_path: TheFinAI/finben-finer-ord
+dataset_path: ChanceFocus/flare-ectsum
 output_type: generate_until
-doc_to_target: '{{answer}}'
+doc_to_target: '{{ {"label": label, "text": text} | tojson }}'
 doc_to_text: '{{query}}'
 fewshot_split: test
 should_decontaminate: true
@@ -13,12 +13,11 @@ generation_kwargs:
   temperature: 0.0
   max_gen_toks: 512
 metric_list:
-  - metric: f1
-    aggregation: mean
+  - metric: !function multifin_utils.ect_rouge1
+    aggregation: !function multifin_utils.ect_rouge1_agg
     higher_is_better: true
 metadata:
   version: '1.0'
-task: FINER_ORD
-tag: en
+task: ECTSUMgen
+tag: en_gen
 test_split: test
-process_results: !function multifin_utils.process_results

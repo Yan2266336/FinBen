@@ -1,5 +1,5 @@
 dataset_name: default
-dataset_path: TheFinAI/finben-finer-ord
+dataset_path: ChanceFocus/flare-sm-acl
 output_type: generate_until
 doc_to_target: '{{answer}}'
 doc_to_text: '{{query}}'
@@ -8,17 +8,22 @@ should_decontaminate: true
 doc_to_decontamination_query: "{{query}}"
 generation_kwargs:
   until:
-    - "@@"
+    - "."
+    - ","
   do_sample: false
   temperature: 0.0
-  max_gen_toks: 512
+  max_gen_toks: 30
+filter_list:
+  - name: "score-first"
+    filter:
+      - function: "regex"
+        regex_pattern: "(Rise|Fall)"
+      - function: "take_first"
 metric_list:
-  - metric: f1
-    aggregation: mean
+  - metric: mcc
     higher_is_better: true
 metadata:
   version: '1.0'
-task: FINER_ORD
-tag: en
+task: ACL18gen
+tag: en_gen
 test_split: test
-process_results: !function multifin_utils.process_results

@@ -19,5 +19,5 @@ metric_list:
 metadata:
   version: '1.0'
 task: XBRLDom
-tag: multifin
+tag: en
 test_split: test

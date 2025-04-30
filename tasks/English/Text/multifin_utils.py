@@ -96,13 +96,13 @@ def FActScore_agg(items):
     preds = list(zip(*items))[1]
 
     ## change this path to your Finben directory
-    path1 = "~/inference/FinBen/decisions.json"
-    path2 = "~/inference/FinBen/facts.json"
-    if os.path.exists(path1):
-        os.remove(path1)
+    # path1 = "~/inference/FinBen/decisions.json"
+    # path2 = "~/inference/FinBen/facts.json"
+    # if os.path.exists(path1):
+    #     os.remove(path1)
 
-    if os.path.exists(path2):
-        os.remove(path2)
+    # if os.path.exists(path2):
+    #     os.remove(path2)
         
     fact_scorer = FactScore()
     scores, _ = fact_scorer.get_factscore(generations=preds, knowledge_sources=refs)

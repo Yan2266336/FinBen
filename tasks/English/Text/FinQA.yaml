@@ -18,7 +18,6 @@ metric_list:
     higher_is_better: true
 metadata:
   version: '1.0'
-task: finqa1
+task: FinQA
 tag: en
 test_split: test
-training_split: test

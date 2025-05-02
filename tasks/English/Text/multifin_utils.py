@@ -12,7 +12,7 @@ from FactScoreLite.factscore import FactScore
 import string
 from seqeval.metrics import f1_score as entity_score
 
-DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+DEVICE = "cuda" if torch.cuda.is_available() else "CPU"
 
 
 # bertscore
@@ -96,13 +96,13 @@ def FActScore_agg(items):
     preds = list(zip(*items))[1]
 
     ## change this path to your Finben directory
-    # path1 = "~/inference/FinBen/decisions.json"
-    # path2 = "~/inference/FinBen/facts.json"
-    # if os.path.exists(path1):
-    #     os.remove(path1)
+    path1 = "~/FinBen/decisions.json"
+    path2 = "~/FinBen/facts.json"
+    if os.path.exists(path1):
+        os.remove(path1)
 
-    # if os.path.exists(path2):
-    #     os.remove(path2)
+    if os.path.exists(path2):
+        os.remove(path2)
         
     fact_scorer = FactScore()
     scores, _ = fact_scorer.get_factscore(generations=preds, knowledge_sources=refs)
@@ -154,8 +154,7 @@ def extract_first_number(value):
     return float(match.group(0)) if match else None 
 
 
-#--------------------------------------------------
-    
+
 ## rouge1 for ECTSUM task
 def get_sum(labels, texts):
     summaries = []
@@ -194,56 +193,6 @@ def ect_rouge1_agg(items):
 
 
 
-
-
-# # summarizaiton
-# def rouge1(items):
-#     """
-#     # passthrough for efficiency
-#     """
-#     return items
-
-
-# def rouge1_agg(items):
-#     """
-#     Higher is better
-#     """
-#     refs = list(zip(*items))[0]
-#     preds = list(zip(*items))[1]
-#     rouge_scorer = evaluate.load("rouge")
-#     return rouge_scorer.compute(predictions=preds, references=refs)["rouge1"]
-
-
-# extractive summarization ROUGE-1 evaluation
-# def parse_prediction_indices(s):
-#     s = s.strip()
-#     try:
-#         items = json.loads(s)
-#     except:
-#         delim = ';' if ';' in s else ',' if ',' in s else None
-#         items = s.split(delim) if delim else [s]
-#     return [int(x) for x in items if x.strip().isdigit()]
-
-
-# def process_results_for_es(doc, results):
-#     choices = doc["choices"]
-
-#     ground_truth_indices = doc["gold"]
-#     print(f"* ground_truth_indices: {ground_truth_indices}")
-#     ground_truth = " ".join([choices[i] for i in ground_truth_indices])
-#     print(f"* ground_truths: {ground_truth}")
-
-#     print(f"* output: {results[0].strip()}")
-
-#     prediction_indices = parse_prediction_indices(results[0].strip())
-#     print(f"* prediction_indices: {prediction_indices}")
-#     prediction = " ".join([choices[i] for i in prediction_indices])
-#     print(f"* prediction: {prediction}")
-    
-#     rouge_scorer = evaluate.load("rouge")
-#     return {"rouge1": rouge_scorer.compute(predictions=[prediction], references=[ground_truth])["rouge1"]}
-
-
 # ner
 
 LMAP = {
@@ -276,22 +225,15 @@ def process_results(doc, results):
 
     entity_pred = process_result(prediction_string, tokens)
     
-    entity_f1_score = entity_score
-    
-    if isinstance(entity_f1_score, tuple):
-        entity_f1_score = entity_f1_score[-1]
+    entity_f1_score = entity_score([gold_labels], [entity_pred])
 
-    return {"f1": float(entity_f1_score)}
-
-
-
+    return {"f1": entity_f1_score}
 
 
 # def process_text(entity_string, text):
 #     # Initialize
-#     entity_list = [(", ".join(val.split(":")[:-1]), val.split(":")[-1]) for val in entity_string.split("\n")]
-#     # text_words = list(filter(None, re.split(r'(\s+|[' + re.escape(string.punctuation).replace('%', '') + r'«»‘’“”€])', text)))
-#     text_words = text
+#     entity_list = [(", ".join(val.split(", ")[:-1]), val.split(", ")[-1]) for val in entity_string.split("\n")]
+#     text_words = list(filter(None, re.split(r'(\s+|[' + re.escape(string.punctuation).replace('%', '') + r'«»‘’“”€])', text)))
 #     # print(text_words)
 #     labels = ['O'] * len(text_words)
 #     # text_lower = text.lower()
@@ -349,8 +291,7 @@ def process_results(doc, results):
 
 
 # def process_results(doc, results):
-#     text = doc["token"]
-#     text = json.loads(text)
+#     text = doc["text"]
 #     # print("\n" + text)
 
 #     ground_truths_string = doc["answer"]
@@ -367,6 +308,9 @@ def process_results(doc, results):
 
 #     f1 = entity_score([ground_truths], [prediction])
 #     return {"f1": f1}
+
+ 
+
 
 
 

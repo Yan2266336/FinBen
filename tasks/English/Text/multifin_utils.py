@@ -276,9 +276,12 @@ def process_results(doc, results):
 
     entity_pred = process_result(prediction_string, tokens)
     
-    entity_f1_score = entity_score([gold_labels], [entity_pred])
+    entity_f1_score = entity_score
+    
+    if isinstance(entity_f1_score, tuple):
+        entity_f1_score = entity_f1_score[-1]
 
-    return {"f1": entity_f1_score}
+    return {"f1": float(entity_f1_score)}
 
 
 

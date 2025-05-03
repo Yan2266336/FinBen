@@ -21,3 +21,4 @@ metadata:
 task: FinQA
 tag: en
 test_split: test
+training_split: test

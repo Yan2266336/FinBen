@@ -1,5 +1,5 @@
 dataset_name: default
-dataset_path: ChanceFocus/flare-causal20-sc
+dataset_path: TheFinAI/flare-sm-bigdata
 doc_to_target: gold
 doc_to_text: '{{query}}'
 output_type: multiple_choice
@@ -8,11 +8,11 @@ fewshot_split: test
 should_decontaminate: true
 doc_to_decontamination_query: "{{query}}"
 metric_list:
-  - metric: f1
-    aggregation: f1
+  - metric: mcc
+    aggregation: matthews_corrcoef
     higher_is_better: true
 metadata:
   version: '1.0'
-task: SC
+task: BigData22
 tag: en
 test_split: test

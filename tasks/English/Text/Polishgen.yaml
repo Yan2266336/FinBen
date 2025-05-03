@@ -21,7 +21,7 @@ filter_list:
       - function: "take_first"
 metric_list:
   - metric: mcc
-    aggregation: mean
+    aggregation: matthews_corrcoef
     higher_is_better: true
 metadata:
   version: '1.0'

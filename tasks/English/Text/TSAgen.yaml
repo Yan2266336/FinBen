@@ -17,8 +17,12 @@ filter_list:
   - name: "score-first"
     filter:
       - function: "regex"
-        regex_pattern: "(negative|positive|neutral)"
+        regex_pattern: "negative|positive|neutral"
       - function: "take_first"
+metric_list:
+  - metric: exact_match
+    aggregation: mean
+    higher_is_better: true
 metadata:
   version: '1.0'
 task: TSAgen

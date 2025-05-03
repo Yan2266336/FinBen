@@ -1,5 +1,5 @@
 dataset_name: default
-dataset_path: TheFinAI/cra-ccf
+dataset_path: TheFinAI/Regulation_XBRL_DomainAndNum_Query_test
 output_type: generate_until
 doc_to_target: '{{answer}}'
 doc_to_text: '{{query}}'
@@ -8,23 +8,16 @@ should_decontaminate: true
 doc_to_decontamination_query: "{{query}}"
 generation_kwargs:
   until:
-    - "."
-    - ","
+    - "@@"
   do_sample: false
   temperature: 0.0
-  max_gen_toks: 30
-filter_list:
-  - name: "score-first"
-    filter:
-      - function: "regex"
-        regex_pattern: "no|yes"
-      - function: "take_first"
+  max_gen_toks: 512
 metric_list:
-  - metric: mcc
-    aggregation: matthews_corrcoef
+  - metric: !function multifin_utils.FActScore
+    aggregation: !function multifin_utils.FActScore_agg
     higher_is_better: true
 metadata:
   version: '1.0'
-task: CCFgen
-tag: en_gen
+task: XBRLDomgen
+tag: en_gen_no
 test_split: test

@@ -15,6 +15,7 @@ conda activate finben
 cd FinBen/finlm_eval/
 pip install -e .
 pip install -e .[vllm]
+pip install -e .[api]
 ```
 
 ## login to your huggingface
@@ -128,3 +129,4 @@ python aggregate.py
 #### frontend/src/pages/LeaderboardPage/components/Leaderboard/constants/tooltips.js
 #### frontend/src/pages/LeaderboardPage/components/Leaderboard/constants/defaults.js
 #### frontend/src/pages/QuotePage/QuotePage.js
+

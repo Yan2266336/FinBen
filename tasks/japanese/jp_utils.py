@@ -175,46 +175,61 @@ def _collect_maximal_terms(
 # ==========================
 
 # Currently unused, but retained for flexibility
-_HR_K = 10
+K_VALUES = (1, 5, 10)
 
 
 def term_hr_agg(items: List[Tuple[Any, Any]]) -> Dict[str, float]:
     """
-    Global HR@K over all terms, for multiple K values.
+    Per-sample HR@K over all terms, then averaged across samples.
+    K is defined in K_VALUES.
     items: list of (gold, pred)
     """
+    zeros = {f"hr_at_{k}": 0.0 for k in K_VALUES}
     if not items:
-        return {"hr_at_1": 0.0, "hr_at_3": 0.0, "hr_at_5": 0.0}
+        return zeros
 
-    gold_raw_list = [g for g, _ in items]
-    pred_raw_list = [p for _, p in items]
+    # accumulate per-sample HR
+    sum_hr = {f"hr_at_{k}": 0.0 for k in K_VALUES}
+    valid_samples = 0
 
-    gold_structs = [_parse_term_structure(g) for g in gold_raw_list]
-    pred_structs = [_parse_term_structure(p) for p in pred_raw_list]
+    for gold_raw, pred_raw in items:
+        gold_struct = _parse_term_structure(gold_raw)
+        pred_struct = _parse_term_structure(pred_raw)
 
-    gold_terms_flat = _flatten_unique_terms(gold_structs)
-    pred_terms_flat = _flatten_unique_terms(pred_structs)
+        # flatten per-sample terms
+        gold_terms_flat = _flatten_unique_terms([gold_struct])
+        pred_terms_flat = _flatten_unique_terms([pred_struct])
 
-    gold_term_set = set(gold_terms_flat)
-    if not gold_term_set:
-        return {"hr_at_1": 0.0, "hr_at_3": 0.0, "hr_at_5": 0.0}
+        gold_term_set = set(gold_terms_flat)
+        if not gold_term_set:
+            # skip samples with no gold terms
+            continue
 
-    if not pred_terms_flat:
-        return {"hr_at_1": 0.0, "hr_at_3": 0.0, "hr_at_5": 0.0}
+        valid_samples += 1
 
-    results = {}
+        if not pred_terms_flat:
+            # this sample contributes 0 to all hr_k
+            continue
 
-    for k in (1, 10, 20, 30):
-        k = min(k, len(pred_terms_flat))
-        pred_top_k = pred_terms_flat[:k]
-        pred_top_k_set = set(pred_top_k)
+        for K in K_VALUES:
+            k_eff = min(K, len(pred_terms_flat))
+            pred_top_k = pred_terms_flat[:k_eff]
+            pred_top_k_set = set(pred_top_k)
 
-        hit_count = len(gold_term_set & pred_top_k_set)
-        hr = hit_count / len(gold_term_set)
+            hit_count = len(gold_term_set & pred_top_k_set)
+            hr = hit_count / len(gold_term_set)
 
-        results[f"hr_at_{k}"] = round(float(hr), 4)
+            sum_hr[f"hr_at_{K}"] += hr
 
-    return results
+    if valid_samples == 0:
+        return zeros
+
+    # average over valid samples and round to 4 decimals
+    avg_hr = {
+        f"hr_at_{K}": round(sum_hr[f"hr_at_{K}"] / valid_samples, 4)
+        for K in K_VALUES
+    }
+    return avg_hr
 
 
 def term_max_f1_agg(items: List[Tuple[Any, Any]]) -> float:

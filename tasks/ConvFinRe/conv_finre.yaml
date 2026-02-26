@@ -1,0 +1,55 @@
+task: ConvFinRe
+dataset_path: TheFinAI/conv-finre-nohistory
+dataset_name: default
+test_split: test
+fewshot_split: test
+
+output_type: generate_until
+
+
+doc_to_text: "{{prompt}}"
+
+doc_to_target: !function conv_finre_utils.doc_to_target_dummy
+
+process_results: !function conv_finre_utils.process_results
+
+generation_kwargs:
+  do_sample: false
+  temperature: 0.0
+  max_gen_toks: 256
+  until:
+    - "@@@"
+
+metric_list:
+  - metric: json_valid
+    aggregation: mean
+    higher_is_better: true
+  - metric: perm_valid
+    aggregation: mean
+    higher_is_better: true
+  - metric: uNDCG
+    aggregation: mean
+    higher_is_better: true
+  - metric: MRR
+    aggregation: mean
+    higher_is_better: true
+  - metric: HR@1
+    aggregation: mean
+    higher_is_better: true
+  - metric: HR@3
+    aggregation: mean
+    higher_is_better: true
+  - metric: tau_utility
+    aggregation: mean
+    higher_is_better: true
+  - metric: tau_momentum
+    aggregation: mean
+    higher_is_better: true
+  - metric: tau_safety
+    aggregation: mean
+    higher_is_better: true
+
+metadata:
+  version: "1.0"
+tag: conv-finre
+
